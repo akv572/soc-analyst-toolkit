@@ -1,0 +1,22 @@
+title: Authentication Brute Force Burst
+id: e9c3a7d5-2b8f-4e6c-9a1d-5c7f3b8e2d4a
+status: experimental
+description: >
+  Detects bursts of failed logons against a single account. Implement as a
+  threshold rule in your SIEM: more than 10 failures for one account within
+  5 minutes. Tune the counts to your baseline.
+author: Arun Kumar Velusamy
+logsource:
+  product: windows
+  service: security
+detection:
+  selection:
+    EventID: 4625
+  timeframe: 5m
+  condition: selection | count() by TargetUserName > 10
+level: medium
+tags:
+  - attack.credential_access
+  - attack.t1110
+falsepositives:
+  - Users with expired cached credentials, misconfigured service accounts

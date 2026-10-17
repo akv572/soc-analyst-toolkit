@@ -1,0 +1,27 @@
+title: Obfuscated PowerShell Command Line
+id: d4b8f2c1-6e5a-4d9b-a3c7-1f8e6b4d2a9c
+status: experimental
+description: Detects PowerShell invocations showing common obfuscation techniques.
+author: Arun Kumar Velusamy
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    Image|endswith:
+      - '\powershell.exe'
+      - '\pwsh.exe'
+    CommandLine|contains:
+      - '-EncodedCommand'
+      - '-enc '
+      - 'FromBase64String'
+      - 'Invoke-Expression'
+      - 'IEX('
+      - 'DownloadString'
+  condition: selection
+level: high
+tags:
+  - attack.defense_evasion
+  - attack.t1027
+falsepositives:
+  - Admin scripts that legitimately use encoded commands; allowlist known script hashes
